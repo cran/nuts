@@ -1,5 +1,6 @@
 ---
 title: "nuts: Convert European Regional Data in R"
+date: "`r Sys.Date()`"
 author:
   - name: "Moritz Hennicke"
     url: https://hennicke.science/
@@ -11,15 +12,7 @@ vignette: >
   %\VignetteIndexEntry{nuts: Convert European Regional Data in R}
   %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
-output: 
-  distill::distill_article:
-    theme: theme.css
-    toc: true
-    number_sections: true
-    toc_depth: 4
-  toc_float: 
-    collapsed: false
-    smooth_scroll: true
+output: rmarkdown::html_vignette
 ---
 
 ```{r, include = FALSE}
@@ -84,7 +77,7 @@ For example, the German district *Northern Saxony* (*Nordsachsen*) is located wi
 
 Since administrative boundaries in Europe change for demographic, economic, political or other reasons, there are five different **versions** of the NUTS Nomenclature (2006, 2010, 2013, 2016, and 2021). The current version, effective from 1 January 2021, lists 104 regions at NUTS-1, 283 regions at NUTS-2, 1 345 regions at NUTS-3 level[^2].
 
-[^1]: [European Interinstitutional Style Guide](https://publications.europa.eu/code/en/en-5000600.htm) In the case of Greece for instance this code was changed from GR to EL in 2011. 
+[^1]: [Eurostat](https://ec.europa.eu/eurostat/web/nuts/history) In the case of Greece this code was changed from GR to EL in 2011. 
 
 [^2]: [2022 report of the European Union](https://ec.europa.eu/eurostat/documents/3859598/15193590/KS-GQ-22-010-EN-N.pdf)
 
@@ -94,7 +87,7 @@ When administrative units are restructured, regional data measured within old bo
 
 Let's take the example of the German state Saxony in the figures below. Here, the NUTS-2 regions *Leipzig* (`DED3` &rarr; `DED5`) and *Chemnitz* (`DED1` &rarr; `DED4`) were reorganized. We are interested in the number of manure storage facilities in 2003 provided by [EUROSTAT](https://ec.europa.eu/eurostat/databrowser/view/PAT_EP_RTOT/default/table) based on the 2006 NUTS version. A part of *Leipzig* was reassigned to *Chemnitz* (center plot), prompting us to recalculate the number of storage facilities in the 2010 version (right plot).
 
-A simple approach is to redistribute manure storage facilities proportional to the transferred area, assuming equal distribution of manure storages across space. In a dasymetric approach, we could make use of built-up area, assuming that manure deposits are more likely to be found close to residential areas and economic sites. In our example, *Leipzig* lost about 7.7% ($\frac{5574}{72360}$) of its built-up area. We re-calculate the number of manure storage facilities by computing 7.7% of *Leipzig's* manure storages $\frac{5574}{72360} * 700 = 54$, subtracting them from Leipzig and adding them to *Chemnitz*.
+A simple approach is to redistribute manure storage facilities proportional to the transferred area, assuming equal distribution of manure storages across space. In a dasymetric approach, we could make use of built-up area, assuming that manure deposits are more likely to be found close to residential areas and economic sites. In our example, *Leipzig* lost about 7.7% (\(\frac{5574}{72360}\)) of its built-up area. We re-calculate the number of manure storage facilities by computing 7.7% of *Leipzig's* manure storages \(\frac{5574}{72360} * 700 = 54\), subtracting them from Leipzig and adding them to *Chemnitz*.
 
 See the Section [*Spatial interpolation in detail*](#method) for an in-depth description of the weighting procedure.
 
@@ -231,7 +224,7 @@ p_final = ggplot() +
         , axis.title = element_blank( ))
 ```
 
-```{r,  echo=FALSE, fig.cap="Holdings with Manure Storage Facilities; BU = Built-Up Area in $m^{2}$; Sources: [Shapefiles](https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts) and [data](https://ec.europa.eu/eurostat/databrowser/view/PAT_EP_RTOT/default/table) are from EUROSTAT; Created using the [sf](https://r-spatial.github.io/sf/) package.", fig.alt ="Maps of NUTS 3 regions Chemnitz and Leipzig in NUTS version 2003, between 2003 and 2006 and 2006. They visualize the example in the text in which Chemnitz contributes a part of its area to Leipzig."}
+```{r,  echo=FALSE, fig.cap="Holdings with Manure Storage Facilities; BU = Built-up area in square meters; Sources: [Shapefiles](https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts) and [data](https://ec.europa.eu/eurostat/databrowser/view/PAT_EP_RTOT/default/table) are from EUROSTAT; Created using the [sf](https://r-spatial.github.io/sf/) package.", fig.alt ="Maps of NUTS 3 regions Chemnitz and Leipzig in NUTS version 2003, between 2003 and 2006 and 2006. They visualize the example in the text in which Chemnitz contributes a part of its area to Leipzig."}
 gridExtra::grid.arrange( p_initial, p_step , p_final , nrow = 1 )
 ```
 
@@ -315,7 +308,7 @@ nuts_get_missing(pat_classified) # ...use helper function
 ## Converting data between NUTS versions
 
 Once the NUTS version and level of the original data are identified, you can easily **convert** the data to any other **NUTS version**. Here is an example of transforming the 2013 Norwegian data to the 2021 NUTS version. Between 2016 and 2021, the number of NUTS-2 regions in Norway decreased by one as the borders of six regions were transformed. The maps below show the affected regions. 
-We provide the classified NUTS data, specify the target NUTS version for data transformation, and supply the variable containing the values to be interpolated. It is important to indicate the **variable type** in the named input-vector since the interpolation approaches differ for [absolute and relative values](https://urban.jrc.ec.europa.eu/nutsconverter/docs/2022_08_04_NUTS_converter.pdf).
+We provide the classified NUTS data, specify the target NUTS version for data transformation, and supply the variable containing the values to be interpolated. It is important to indicate the **variable type** in the named input-vector since the interpolation approaches differ for [absolute and relative values](https://urban.jrc.ec.europa.eu/static/sites/nutsconverter/2022_08_04_NUTS_converter.pdf).
 
 ```{r}
 # Converting Data to 2021 NUTS version
@@ -766,7 +759,7 @@ To keep track of these changes, the `nuts` package uses two data sets:
 1. Stocks: data(`all_nuts_codes`) contains **all historical NUTS codes** by NUTS version and country
 2. Flows: data(`cross_walks`) contains the **conversion tables** between NUTS versions
 
-They are based on [data provided by the JRC](https://urban.jrc.ec.europa.eu/nutsconverter/#/). Both data sets can also be used by the user manually to explore specific conversion patterns more closely. 
+They are based on [data provided by the JRC](https://urban.jrc.ec.europa.eu/tools/nuts-converter?lng=en). Both data sets can also be used by the user manually to explore specific conversion patterns more closely. 
 
 For Norway going from version 2016 to 2021 at NUTS level 2, the `cross_walks` can be easily subset as follows:
 
@@ -1122,16 +1115,17 @@ kable(convert_rel_calc, "html") %>%
 
 # Citation
 
-Please support the development of open science by citing the JRC and us in your work. 
+Please support the development of open science and data by citing the JRC and us in your work:
 
 -   Joint Research Centre (2022) NUTS converter. <https://urban.jrc.ec.europa.eu/tools/nuts-converter>
 
--   Hennicke M, Krause W (2024). _nuts: Convert European Regional Data_. R package version 1.0.0,
-  <https://docs.ropensci.org/nuts/>
+-   Hennicke M, Krause W (2024). _nuts: Convert European Regional Data_. doi:10.5281/zenodo.10573056
+  <https://doi.org/10.5281/zenodo.10573056>, R package version 1.1.0, <https://docs.ropensci.org/nuts/>. 
+
 
 Bibtex Users:
 
-```
+```         
 @Manual{,
   title = {NUTS converter},
   author = {Joint Research Centre},
@@ -1143,10 +1137,8 @@ Bibtex Users:
   title = {nuts: Convert European Regional Data},
   author = {Moritz Hennicke and Werner Krause},
   year = {2024},
-  note = {R package version 1.0.0},
+  note = {R package version 1.1.0},
   url = {https://docs.ropensci.org/nuts/},
+  doi = {10.5281/zenodo.10573056},
 }
 ```
-
-
-

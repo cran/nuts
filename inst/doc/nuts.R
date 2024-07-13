@@ -143,7 +143,7 @@ p_final = ggplot() +
         , axis.ticks = element_blank( )
         , axis.title = element_blank( ))
 
-## ----echo=FALSE, fig.cap="Holdings with Manure Storage Facilities; BU = Built-Up Area in $m^{2}$; Sources: [Shapefiles](https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts) and [data](https://ec.europa.eu/eurostat/databrowser/view/PAT_EP_RTOT/default/table) are from EUROSTAT; Created using the [sf](https://r-spatial.github.io/sf/) package.", fig.alt ="Maps of NUTS 3 regions Chemnitz and Leipzig in NUTS version 2003, between 2003 and 2006 and 2006. They visualize the example in the text in which Chemnitz contributes a part of its area to Leipzig."----
+## ----echo=FALSE, fig.cap="Holdings with Manure Storage Facilities; BU = Built-up area in square meters; Sources: [Shapefiles](https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts) and [data](https://ec.europa.eu/eurostat/databrowser/view/PAT_EP_RTOT/default/table) are from EUROSTAT; Created using the [sf](https://r-spatial.github.io/sf/) package.", fig.alt ="Maps of NUTS 3 regions Chemnitz and Leipzig in NUTS version 2003, between 2003 and 2006 and 2006. They visualize the example in the text in which Chemnitz contributes a part of its area to Leipzig."----
 gridExtra::grid.arrange( p_initial, p_step , p_final , nrow = 1 )
 
 ## ----echo=FALSE, out.width='60%', fig.align="center", fig.cap="Sequential workflow to convert regional NUTS data", fig.alt ="Flow diagram that shows that conversion functions are run after classification."----
